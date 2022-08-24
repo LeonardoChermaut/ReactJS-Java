@@ -1,5 +1,4 @@
 package com.java.auth.controller;
-import com.data.alter.exception.*;
 import com.java.auth.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
