@@ -1,2 +1,1 @@
-# ReactJS-Java
-Site with auth and crud front and back end
+Aplying some concepts of the studies with Java API RESTFULL.
