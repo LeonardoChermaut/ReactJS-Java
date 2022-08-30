@@ -2,7 +2,6 @@ package com.java.auth.service;
 import com.java.auth.dto.CreateUserDto;
 import com.java.auth.dto.UpdateUserDto;
 import com.java.auth.dto.UserDto;
-import com.java.auth.exception.UserEmailException;
 import com.java.auth.exception.UserNotExistentException;
 import com.java.auth.exception.UserNotFoundException;
 import com.java.auth.model.UserModel;
