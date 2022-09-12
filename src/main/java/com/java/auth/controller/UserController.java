@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Long> save(@Valid @RequestBody CreateUserDto dto) throws UserNotExistentException, UserEmailException {
+    public ResponseEntity<Long> save(@Valid @RequestBody CreateUserDto dto) throws Exception {
         return ResponseEntity.ok(service.save(dto));
     }
 

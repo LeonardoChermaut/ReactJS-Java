@@ -36,13 +36,13 @@ public class UserService {
 	}
 
 	@Transactional
-	public Long save(CreateUserDto dto) throws UserNotExistentException , UserEmailException {
+	public Long save(CreateUserDto dto) throws Exception {
 		UserModel model = mapper.map(dto, UserModel.class);
 		model.setSenha(getPassEncoder().encode(dto.getSenha()));
 
 
 		if(repository.findByEmail(model.getEmail()).isPresent()) {
-			throw new UserEmailException();
+			throw new Exception("Email já existente");
 		}
 		return repository.save(model).getId();
 	}

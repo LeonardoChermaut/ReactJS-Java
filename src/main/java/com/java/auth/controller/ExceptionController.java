@@ -19,13 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
     }
 
 
-    @ExceptionHandler(value = UserEmailException.class)
-    public ResponseEntity<Object> handleEmailUserException(
-            Exception ex, WebRequest request) {
-        String bodyOfResponse = "Esse email já foi utilizado" + (ex.getMessage() == null ? "" : ex.getMessage());
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
-    }
-
     @ExceptionHandler(value = UserInvalidException.class)
     public ResponseEntity<Object> handleUserInvalidoException(
            Exception ex, WebRequest request) {
