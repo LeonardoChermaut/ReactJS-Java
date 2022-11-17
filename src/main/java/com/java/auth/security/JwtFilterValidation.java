@@ -1,7 +1,7 @@
 package com.java.auth.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.java.auth.service.DetalheUsuarioServiceImpl;
+import com.java.auth.service.UserDetailServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,13 +17,13 @@ import java.util.ArrayList;
 
 public class JwtFilterValidation extends BasicAuthenticationFilter {
 
-    public static final String HEADER_ATRIBUTO = "Authorization";
-    public static final String ATRIBUTO_PREFIXO = "Bearer ";
-    private final DetalheUsuarioServiceImpl servicoUsuario;
+    public static final String AUTH = "Authorization";
+    public static final String BEARER = "Bearer ";
+    private final UserDetailServiceImpl userServiceDetail;
 
-    public JwtFilterValidation(AuthenticationManager authenticationManager, DetalheUsuarioServiceImpl servicoUsuario) {
+    public JwtFilterValidation(AuthenticationManager authenticationManager, UserDetailServiceImpl userService) {
         super(authenticationManager);
-        this.servicoUsuario = servicoUsuario;
+        this.userServiceDetail = userService;
     }
 
     @Override
@@ -31,19 +31,19 @@ public class JwtFilterValidation extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String atributo = request.getHeader(HEADER_ATRIBUTO);
+        String header = request.getHeader(AUTH);
 
-        if (atributo == null) {
+        if (header == null) {
             chain.doFilter(request, response);
             return;
         }
 
-        if (!atributo.startsWith(ATRIBUTO_PREFIXO)) {
+        if (!header.startsWith(BEARER)) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = atributo.replace(ATRIBUTO_PREFIXO, "");
+        String token = header.replace(BEARER, "");
         UsernamePasswordAuthenticationToken authenticationToken = getAuthToken(token);
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -52,16 +52,16 @@ public class JwtFilterValidation extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthToken(String token) {
 
-        String usuario = JWT.require(Algorithm.HMAC512(JwtFilterAuthentication.TOKEN_SENHA))
+        String user = JWT.require(Algorithm.HMAC512(JwtFilterAuthentication.TOKEN_SENHA))
                 .build()
                 .verify(token)
                 .getSubject();
 
-        if (usuario == null) {
+        if (user == null) {
             return null;
         }
-        UserDetails usuariodetalhe = servicoUsuario.loadUserByUsername(usuario);
+        UserDetails userDetail = userServiceDetail.loadUserByUsername(user);
 
-        return new UsernamePasswordAuthenticationToken(usuariodetalhe, null, new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(userDetail, null, new ArrayList<>());
     }
 }

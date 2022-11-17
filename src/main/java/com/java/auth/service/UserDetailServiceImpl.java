@@ -11,20 +11,19 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class DetalheUsuarioServiceImpl implements UserDetailsService {
-
+public class UserDetailServiceImpl implements UserDetailsService {
     private final UserRepository repository;
 
-    public DetalheUsuarioServiceImpl(UserRepository repository) {
-        this.repository = repository;
+    public UserDetailServiceImpl(UserRepository userRepository) {
+        this.repository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<UserModel> usuario = repository.findByEmail(login);
-        if (usuario.isPresent()) {
-            return new UserDetailsImpl(usuario);
+        Optional<UserModel> user = repository.findByEmail(login);
+        if (user.isPresent()) {
+            return new UserDetailsImpl(user);
         }
-        throw new UsernameNotFoundException("User [" + login + "] não encontrado");
+        throw new UsernameNotFoundException("Usuário [" + login + "] não encontrado");
     }
 }

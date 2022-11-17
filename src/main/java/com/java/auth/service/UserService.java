@@ -2,7 +2,7 @@ package com.java.auth.service;
 import com.java.auth.dto.CreateUserDto;
 import com.java.auth.dto.UpdateUserDto;
 import com.java.auth.dto.UserDto;
-import com.java.auth.exception.UserNotExistentException;
+import com.java.auth.exception.UserException;
 import com.java.auth.exception.UserNotFoundException;
 import com.java.auth.model.UserModel;
 import com.java.auth.repository.UserRepository;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -31,18 +30,17 @@ public class UserService {
 
 	@Bean
 	public PasswordEncoder getPassEncoder(){
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return passwordEncoder;
 	}
 
 	@Transactional
-	public Long save(CreateUserDto dto) throws Exception {
+	public Long save(CreateUserDto dto) throws UserException {
 		UserModel model = mapper.map(dto, UserModel.class);
 		model.setSenha(getPassEncoder().encode(dto.getSenha()));
 
-
 		if(repository.findByEmail(model.getEmail()).isPresent()) {
-			throw new Exception("Email já existente");
+			throw new UserException("Email já existente");
 		}
 		return repository.save(model).getId();
 	}
@@ -64,7 +62,10 @@ public class UserService {
 
 	@Transactional
 	public List<UserDto> allObjects() {
-		return repository.findAll().stream().map(model -> mapper.map(model, UserDto.class))
+		return repository
+				.findAll()
+				.stream()
+				.map(model -> mapper.map(model, UserDto.class))
 				.collect(Collectors.toList());
 	}
 
@@ -75,7 +76,9 @@ public class UserService {
 
 	@Transactional
 	private UserDto objectOrThrow(long id) throws UserNotFoundException {
-		return repository.findById(id).map(model -> mapper.map(model, UserDto.class))
+		return repository
+				.findById(id)
+				.map(model -> mapper.map(model, UserDto.class))
 				.orElseThrow(UserNotFoundException::new);
 	}
 

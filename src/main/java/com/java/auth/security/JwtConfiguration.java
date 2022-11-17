@@ -1,6 +1,6 @@
 package com.java.auth.security;
 
-import com.java.auth.service.DetalheUsuarioServiceImpl;
+import com.java.auth.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +22,10 @@ import java.util.Arrays;
 public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private DetalheUsuarioServiceImpl servicoUsuario;
+	private UserDetailServiceImpl userServiceDetail;
 
 	@Autowired
-	private PasswordEncoder codificador;
+	private PasswordEncoder codification;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -35,26 +35,27 @@ public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 				.anyRequest()
 				.authenticated()
 				.and().addFilter(new JwtFilterAuthentication(authenticationManager()))
-				.addFilter(new JwtFilterValidation(authenticationManager(), servicoUsuario)).
+				.addFilter(new JwtFilterValidation(authenticationManager(), userServiceDetail)).
 				sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.cors().and().csrf().disable();
 	}
 
 	@Bean
 	CorsConfigurationSource sourceConfig() {
-		CorsConfiguration configuracao = new CorsConfiguration();
-		configuracao.setAllowedOrigins(Arrays.asList("http://localhost:3000/*" , "/**"));
-		configuracao.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
-		configuracao.setAllowCredentials(true);
-		configuracao.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+		CorsConfiguration configuration
+				= new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/*" , "/**"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuracao);
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(servicoUsuario).passwordEncoder(codificador);
+		auth.userDetailsService(userServiceDetail).passwordEncoder(codification);
 	}
 
 	@Override

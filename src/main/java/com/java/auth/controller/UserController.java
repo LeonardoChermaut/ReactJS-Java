@@ -4,7 +4,6 @@ import com.java.auth.dto.CreateUserDto;
 import com.java.auth.dto.UpdateUserDto;
 import com.java.auth.dto.UserDto;
 import com.java.auth.exception.UserException;
-import com.java.auth.exception.UserNotExistentException;
 import com.java.auth.exception.UserNotFoundException;
 import com.java.auth.model.UserModel;
 import com.java.auth.service.UserService;
@@ -25,7 +24,7 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Long> save(@Valid @RequestBody CreateUserDto dto) throws Exception {
+    public ResponseEntity<Long> save(@Valid @RequestBody CreateUserDto dto) throws UserException {
         return ResponseEntity.ok(service.save(dto));
     }
 
