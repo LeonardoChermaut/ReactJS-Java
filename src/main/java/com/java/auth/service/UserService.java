@@ -38,9 +38,9 @@ public class UserService {
 	public Long save(CreateUserDto dto) throws UserException {
 		UserModel model = mapper.map(dto, UserModel.class);
 		model.setSenha(getPassEncoder().encode(dto.getSenha()));
-
+		model.setEmail((dto.getEmail()));
 		if(repository.findByEmail(model.getEmail()).isPresent()) {
-			throw new UserException("Email já existente");
+			throw new UserException();
 		}
 		return repository.save(model).getId();
 	}
@@ -82,8 +82,8 @@ public class UserService {
 				.orElseThrow(UserNotFoundException::new);
 	}
 
-	public Optional<UserModel> contex() {
-		UserModel model = util.getUsuario();
+	public Optional<UserModel> context() {
+		UserModel model = util.getUser();
 		return repository.findByNome(model.getNome());
 	}
 

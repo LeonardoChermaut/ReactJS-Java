@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping("/contex")
     public ResponseEntity<Optional<UserModel>> contex() {
         ResponseEntity.accepted().body(HttpStatus.CONTINUE);
-        return ResponseEntity.ok(service.contex());
+        return ResponseEntity.ok(service.context());
     }
 
 }

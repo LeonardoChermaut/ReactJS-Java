@@ -12,10 +12,10 @@ public class UserDetailsImpl implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    private final Optional<UserModel> usuario;
+    private final Optional<UserModel> user;
 
-    public UserDetailsImpl(Optional<UserModel> usuario) {
-        this.usuario = usuario;
+    public UserDetailsImpl(Optional<UserModel> user) {
+        this.user = user;
     }
 
     @Override
@@ -25,16 +25,16 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return usuario.orElse(new UserModel()).getSenha();
+        return user.orElse(new UserModel()).getSenha();
     }
 
     @Override
     public String getUsername() {
-        return usuario.orElse(new UserModel()).getEmail();
+        return user.orElse(new UserModel()).getEmail();
     }
 
     public String getName() {
-        return usuario.orElse(new UserModel()).getNome();
+        return user.orElse(new UserModel()).getNome();
     }
 
     @Override

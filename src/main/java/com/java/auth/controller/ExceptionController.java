@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
         @ExceptionHandler(value = UserException.class)
         public ResponseEntity<Object> handleUserException(
             Exception ex, WebRequest request) {
-            String bodyOfResponse = "Verifique os parametros passados. " + (ex.getMessage() == null ? "" : ex.getMessage());
+            String bodyOfResponse = "Email já cadastrado. " + (ex.getMessage() == null ? "" : ex.getMessage());
             return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 

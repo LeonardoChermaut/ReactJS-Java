@@ -12,19 +12,19 @@ import java.util.Optional;
 public class UserUtil {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
-    public UserModel getUsuarioLogado() {
+    public UserModel getContext() {
         UserDetailsImpl userDetail = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<UserModel> usuario = repository.findByEmail(userDetail.getUsername());
+        Optional<UserModel> user = userRepository.findByEmail(userDetail.getUsername());
 
-        return usuario.orElse(null);
+        return user.orElse(null);
     }
 
-    public UserModel getUsuario() {
+    public UserModel getUser() {
         UserDetailsImpl userDetail = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<UserModel> usuario = repository.findByNome(userDetail.getName());
+        Optional<UserModel> user = userRepository.findByNome(userDetail.getName());
 
-        return usuario.orElse(null);
+        return user.orElse(null);
     }
 }

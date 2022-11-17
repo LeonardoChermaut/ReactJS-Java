@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class JwtFilterValidation extends BasicAuthenticationFilter {
 
-    public static final String AUTH = "Authorization";
+    public static final String AUTHENTICATION = "Authorization";
     public static final String BEARER = "Bearer ";
     private final UserDetailServiceImpl userServiceDetail;
 
@@ -31,13 +31,11 @@ public class JwtFilterValidation extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String header = request.getHeader(AUTH);
-
+        String header = request.getHeader(AUTHENTICATION);
         if (header == null) {
             chain.doFilter(request, response);
             return;
         }
-
         if (!header.startsWith(BEARER)) {
             chain.doFilter(request, response);
             return;
@@ -45,14 +43,13 @@ public class JwtFilterValidation extends BasicAuthenticationFilter {
 
         String token = header.replace(BEARER, "");
         UsernamePasswordAuthenticationToken authenticationToken = getAuthToken(token);
-
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         chain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthToken(String token) {
 
-        String user = JWT.require(Algorithm.HMAC512(JwtFilterAuthentication.TOKEN_SENHA))
+        String user = JWT.require(Algorithm.HMAC512(JwtFilterAuthentication.TOKEN_PASSWORD))
                 .build()
                 .verify(token)
                 .getSubject();
@@ -61,7 +58,6 @@ public class JwtFilterValidation extends BasicAuthenticationFilter {
             return null;
         }
         UserDetails userDetail = userServiceDetail.loadUserByUsername(user);
-
         return new UsernamePasswordAuthenticationToken(userDetail, null, new ArrayList<>());
     }
 }

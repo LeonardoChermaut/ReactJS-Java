@@ -23,14 +23,13 @@ public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailServiceImpl userServiceDetail;
-
 	@Autowired
 	private PasswordEncoder codification;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/login" , "/user")
+				.antMatchers(HttpMethod.POST, "/login" , "/api/user")
 				.permitAll()
 				.anyRequest()
 				.authenticated()
