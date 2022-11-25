@@ -28,16 +28,13 @@ public class UserService {
 	@Autowired
 	private UserUtil util;
 
-	@Bean
-	public PasswordEncoder getPassEncoder(){
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		return passwordEncoder;
-	}
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public Long save(CreateUserDto dto) throws UserException {
 		UserModel model = mapper.map(dto, UserModel.class);
-		model.setSenha(getPassEncoder().encode(dto.getSenha()));
+		model.setSenha(passwordEncoder.encode(dto.getSenha()));
 		model.setEmail((dto.getEmail()));
 		if(repository.findByEmail(model.getEmail()).isPresent()) {
 			throw new UserException();
@@ -75,7 +72,7 @@ public class UserService {
 	}
 
 	@Transactional
-	private UserDto objectOrThrow(long id) throws UserNotFoundException {
+	public UserDto objectOrThrow(long id) throws UserNotFoundException {
 		return repository
 				.findById(id)
 				.map(model -> mapper.map(model, UserDto.class))
