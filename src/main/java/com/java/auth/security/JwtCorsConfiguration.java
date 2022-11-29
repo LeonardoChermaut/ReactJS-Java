@@ -17,8 +17,9 @@ public class JwtCorsConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*")
-                .allowedOrigins("*")
+        registry.addMapping("/**")
+                .allowedMethods("/**")
+                .allowedOrigins("/**")
                 .allowedMethods("PUT", "DELETE", "GET" , "POST")
                 .allowedHeaders("header1", "header2", "header3")
                 .exposedHeaders("header1", "header2")

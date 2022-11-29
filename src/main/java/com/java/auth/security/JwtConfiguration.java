@@ -45,14 +45,13 @@ public class JwtConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	CorsConfigurationSource sourceConfig() {
-		CorsConfiguration configuration
-				= new CorsConfiguration();
-		configuration.setAllowCredentials(true);
-		configuration.setAllowedOrigins(Arrays.asList("*"));
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/*" , "/**"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type" , "X-Frame-Options" ));
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type" , "X-Frame-Options" , "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "X-Requested-With"));
+		configuration.setAllowCredentials(true);
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("*", configuration);
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 

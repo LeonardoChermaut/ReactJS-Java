@@ -79,9 +79,10 @@ public class UserService {
 				.orElseThrow(UserNotFoundException::new);
 	}
 
+	@Transactional
 	public Optional<UserModel> context() {
 		UserModel model = util.getUser();
-		return repository.findByNome(model.getNome());
+		return repository.findByEmail(model.getEmail());
 	}
 
 }
