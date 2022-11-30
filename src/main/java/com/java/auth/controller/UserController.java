@@ -49,8 +49,8 @@ public class UserController {
         return ResponseEntity.ok(service.allObjects());
     }
 
-    @GetMapping("/contex")
-    public ResponseEntity<Optional<UserModel>> contex() {
+    @GetMapping("/context")
+    public ResponseEntity<Optional<UserModel>> context() {
         ResponseEntity.accepted().body(HttpStatus.CONTINUE);
         return ResponseEntity.ok(service.context());
     }
