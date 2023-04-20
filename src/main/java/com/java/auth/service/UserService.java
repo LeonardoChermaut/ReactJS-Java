@@ -10,6 +10,7 @@ import com.java.auth.util.UserUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,17 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public Long save(CreateUserDto dto) throws UserException {
+	public HttpStatus save(CreateUserDto dto) throws UserException {
 		UserModel model = mapper.map(dto, UserModel.class);
+		model.setNome(dto.getNome());
+		model.setSobrenome(dto.getSobrenome());
 		model.setSenha(passwordEncoder.encode(dto.getSenha()));
 		model.setEmail((dto.getEmail()));
 		if(repository.findByEmail(model.getEmail()).isPresent()) {
 			throw new UserException();
 		}
-		return repository.save(model).getId();
+		repository.save(model);
+		return HttpStatus.ACCEPTED;
 	}
 
 	@Transactional
@@ -48,15 +52,14 @@ public class UserService {
 		model.setNome(dto.getNome());
 		model.setEmail(dto.getEmail());
 		model.setSobrenome(dto.getSobrenome());
+		model.setSenha(dto.getSenha());
 		repository.save(model);
 	}
-
 	@Transactional
 	public void remove(long id) throws UserNotFoundException {
 		objectOrThrow(id);
 		repository.deleteById(id);
 	}
-
 	@Transactional
 	public List<UserDto> allObjects() {
 		return repository
@@ -65,12 +68,10 @@ public class UserService {
 				.map(model -> mapper.map(model, UserDto.class))
 				.collect(Collectors.toList());
 	}
-
 	@Transactional
 	public UserDto findById(long id) throws UserNotFoundException {
 		return objectOrThrow(id);
 	}
-
 	@Transactional
 	public UserDto objectOrThrow(long id) throws UserNotFoundException {
 		return repository
@@ -78,11 +79,9 @@ public class UserService {
 				.map(model -> mapper.map(model, UserDto.class))
 				.orElseThrow(UserNotFoundException::new);
 	}
-
 	@Transactional
 	public Optional<UserModel> context() {
 		UserModel model = util.getUser();
 		return repository.findByEmail(model.getEmail());
 	}
-
 }

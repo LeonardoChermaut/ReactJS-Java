@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Long> save(@Valid @RequestBody CreateUserDto dto) throws UserException {
+    public ResponseEntity<HttpStatus> save(@Valid @RequestBody CreateUserDto dto) throws UserException {
         return ResponseEntity.ok(service.save(dto));
     }
 
